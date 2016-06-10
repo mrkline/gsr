@@ -1,0 +1,7 @@
+[package]
+name = "gsr"
+version = "0.1.0"
+authors = ["Matt Kline <matt@bitbashing.io>"]
+
+[dependencies]
+getopts = "0.2"
