@@ -22,6 +22,7 @@ fn main() {
     opts.optflag("a", "alpha", "Render with a transparent background");
     opts.optflag("g", "grayscale", "Render in grayscale");
     opts.optopt("o", "", "Set output file name", "NAME");
+    opts.optopt("d", "dpi", "Pixels per inch", "PIXELS");
     opts.optopt("p", "pages", "Pages to rasterize", "PAGES");
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m }
@@ -61,16 +62,23 @@ fn main() {
             String::new()
         };
 
+    let dpi = if matches.opt_present("d") {
+            "-r".to_string() + &matches.opt_str("d").unwrap()
+        } else {
+            "-r600".to_string()
+        };
+
     // Quiet, batch processing mode, hinting and anit-aliasing maxed.
     let stock_args = ["-dQUIET", "-dSAFER", "-dBATCH", "-dNOPAUSE",
                      "-dGridFitTT=2",  "-dGraphicsAlphaBits=4",
                      "-dTextAlphaBits=4"];
 
-    let mut gs_command = Command::new("echo");
+    let mut gs_command = Command::new("gs");
 
     gs_command
         .args(&stock_args)
-        .arg(match mode {
+        .arg(&dpi)
+        .arg("-sDEVICE=".to_string() + &match mode {
             RenderMode::Alpha => "pngalpha",
             RenderMode::Color => "png16m",
             RenderMode::Grayscale => "pnggray",
