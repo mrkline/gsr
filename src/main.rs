@@ -78,7 +78,7 @@ fn main() {
     gs_command
         .args(&stock_args)
         .arg(&dpi)
-        .arg("-sDEVICE=".to_string() + &match mode {
+        .arg("-sDEVICE=".to_string() + match mode {
             RenderMode::Alpha => "pngalpha",
             RenderMode::Color => "png16m",
             RenderMode::Grayscale => "pnggray",
